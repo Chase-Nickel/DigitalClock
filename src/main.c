@@ -111,22 +111,13 @@ int print_time(struct tm *timeinfo) {
     for (size_t i = 0; i < 5; i++) {
         for (size_t j = 0; j < num_length; j++) {
             size_t idx = 0;
-            switch (numbuf[j]) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
+            char to_display = numbuf[j];
+            if ('0' <= to_display && to_display <= '9') {
                 idx = numbuf[j] - '0';
-                break;
-            case ':':
+            } else if (to_display == ':') {
                 idx = 10;
-                break;
+            } else {
+                goto exit;
             }
             wchar_t(*digit_lines)[11] = digits_10x5[idx];
             wchar_t *digit = digit_lines[i];
@@ -137,6 +128,7 @@ int print_time(struct tm *timeinfo) {
         printf("%ls\n", line);
     }
 
+exit:
     free(line);
     return 0;
 }
